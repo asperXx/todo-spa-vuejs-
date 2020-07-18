@@ -5,11 +5,21 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    notes: JSON.parse(localStorage.getItem('notes') || '[]')
   },
   mutations: {
+    createNote(state, note) {
+      state.notes.push(note)
+
+      localStorage.setItem('notes', JSON.stringify(state.notes))
+    }
   },
   actions: {
+    createNote(state, note) {
+      this.commit('createNote',note)
+    },
   },
-  modules: {
+  getters: {
+    notes: s => s.notes
   }
 })

@@ -1,18 +1,37 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="home">
+    <h1>Список заметок</h1>
+    <div v-if="notes.length">
+    <div 
+    v-for="note in notes"
+    :key="note.id"
+    class="cardNote"
+    >
+    <input type="checkbox">
+    {{note.title}}
+    </div>
+    </div>
+    <p v-else>NONONONONO</p>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+
+
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  computed: {
+    notes() {
+      return this.$store.getters.notes
+    }
   }
 }
 </script>
+
+<style>
+#home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

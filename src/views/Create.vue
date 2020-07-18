@@ -67,7 +67,7 @@ form {
   flex-direction: column;
   justify-content: center;
 }
-input {
+#create input {
   padding: 10px;
   margin: 15px 0px;
 }

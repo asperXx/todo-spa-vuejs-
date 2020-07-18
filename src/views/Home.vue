@@ -3,12 +3,23 @@
     <h1>Список заметок</h1>
     <div v-if="notes.length">
     <div 
-    v-for="note in notes"
-    :key="note.id"
+    v-for="(note,id) in notes"
+    :key="id"
     class="cardNote"
-    >
-    <input type="checkbox">
-    {{note.title}}
+    >{{note.title}}
+    
+    <ul class="taskList">
+      <li 
+      v-for="(task, id) in note.tasksPoints"
+      :key="id">
+      <input :id="task + id" type="checkbox" class="custom-checkbox" disabled>
+      <label :for="task + id" >{{ task }}</label>
+      </li>
+    </ul>
+    <div class="buttons">
+      <router-link :to="'/note/'+ note.id" tag="button">Редактировать</router-link>
+      <button>Удалить</button>
+    </div>
     </div>
     </div>
     <p v-else>NONONONONO</p>
@@ -20,6 +31,11 @@
 
 
 export default {
+  data () {
+    return {
+
+    }
+  },
   computed: {
     notes() {
       return this.$store.getters.notes
@@ -28,10 +44,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #home {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 </style>

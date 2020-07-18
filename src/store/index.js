@@ -20,6 +20,7 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    notes: s => s.notes
+    notes: s => s.notes,
+    noteById: s => id => s.notes.find(t => t.id === id)
   }
 })

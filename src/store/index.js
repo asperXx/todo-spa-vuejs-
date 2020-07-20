@@ -12,15 +12,28 @@ export default new Vuex.Store({
       state.notes.push(note)
 
       localStorage.setItem('notes', JSON.stringify(state.notes))
+    },
+    updateNote(state, {id, tasksPoints}) {
+      const notes = state.notes.concat()
+
+      const idx = notes.findIndex(n => n.id === id)
+      const note = notes[idx]
+
+      notes[idx] = {...note, tasksPoints}
+      state.notes = notes
+      localStorage.setItem('notes', JSON.stringify(state.notes))
     }
   },
   actions: {
-    createNote(state, note) {
-      this.commit('createNote',note)
+    createNote({commit}, note) {
+      commit('createNote',note)
     },
+    updateNote({commit}, note) {
+      commit('updateNote', note)
+    }
   },
   getters: {
     notes: s => s.notes,
-    noteById: s => id => s.notes.find(t => t.id === id)
+    noteById: s => id => s.notes.find(n => n.id === id)
   }
 })

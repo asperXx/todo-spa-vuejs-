@@ -8,11 +8,17 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faDragon } from '@fortawesome/free-solid-svg-icons'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
+import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faTrashAlt, faDragon, faPlus, faUndo)
 
+import VModal from 'vue-js-modal'
+Vue.use(VModal, { componentName: 'Modal' })
+
+library.add(faTrashAlt, faDragon, faPlus, faChevronCircleRight, faChevronCircleLeft, faWindowClose)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

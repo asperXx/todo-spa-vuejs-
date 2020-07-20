@@ -3,12 +3,12 @@
     <div id="nav">
       <font-awesome-icon icon="dragon" :style="{ color: 'white' }" size="2x" />
       <ul class="nav-area">
-        <router-link to="/"
-          ><li><a>Список заметок</a></li></router-link
-        >
-        <router-link to="/create"
-          ><li><a>Создать заметку</a></li></router-link
-        >
+        <li><router-link to="/"
+          ><a>Список заметок</a></router-link
+        ></li>
+        <li><router-link to="/create"
+          ><a>Создать заметку</a></router-link
+        ></li>
       </ul>
     </div>
     <router-view />
@@ -40,9 +40,9 @@
     display: inline-block;
     text-transform: uppercase;
     height: 100%;
-    color: #fff;
     a {
       text-decoration: none;
+      color: #fff;
     }
   }
   li:hover {

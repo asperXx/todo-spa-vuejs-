@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   data() {
     return {
@@ -34,6 +35,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['createNote']),
     addTask() {
       if (this.taskInput !== ''){
       this.tasksPoints.push(this.taskInput);
@@ -48,7 +50,7 @@ export default {
         tasksPoints: this.tasksPoints,
         id: Date.now()
       }
-      this.$store.dispatch('createNote', note)
+      this.createNote(note)
       this.$router.push('/')
     }
   },

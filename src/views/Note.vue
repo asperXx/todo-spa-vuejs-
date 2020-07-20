@@ -2,7 +2,7 @@
   <div id="note">
     <div class="cardNote">
       <h1>{{ note.title }}</h1>
-      <a class="close btn" @click="undoEdit">
+      <a class="close btn" @click="$modal.show('undoEditModal')">
         <font-awesome-icon icon="trash-alt" size="lg" />
       </a>
       <ul class="taskList">
@@ -13,12 +13,12 @@
           </label>
           <button @click.prevent="tasksPoints.splice(id, 1)">
             <font-awesome-icon icon="trash-alt" size="lg" />
-            </button>
+          </button>
         </li>
       </ul>
       <div class="buttons">
         <a class="btn" @click="saveEdit">Сохранить</a>
-        <a class="btn" @click="addTaskModalOpen">
+        <a class="btn" @click="$modal.show('addTaskModal')">
           <font-awesome-icon icon="plus" size="lg" />
         </a>
         <div>
@@ -29,73 +29,64 @@
             <font-awesome-icon icon="chevron-circle-right" size="lg" />
           </a>
         </div>
-        <a class="btn">
+        <a class="btn" @click="deleteNoteB">
           <font-awesome-icon icon="trash-alt" size="lg" />
         </a>
       </div>
     </div>
-        <modal name="addTaskModal"
-        
-        :width="400"
-         :height="90"
-         :adaptive="true">
-          <input type="text" class="addTaskInput" v-model="newTask">
-          <a class="btn" @click="addTask">Add</a>
-          <a class="btnClose" @click="$modal.hide('addTaskModal')">
-            <font-awesome-icon icon="window-close" />
-            </a>
-        </modal>
+    <modal name="addTaskModal" :width="400" :height="90" :adaptive="true">
+      <input type="text" class="addTaskInput" v-model="newTask" />
+      <a class="btn" @click="addTask">Add</a>
+      <a class="btnClose" @click="$modal.hide('addTaskModal')">
+        <font-awesome-icon icon="window-close" />
+      </a>
+    </modal>
 
-         <modal name="undoEditModal"
-        
-        :width="400"
-         :height="90"
-         :adaptive="true">
-          <input type="text" class="addTaskInput" v-model="newTask">
-          <a class="btn" @click="addTask">Да</a>
-          <a class="btn" @click="$modal.hide('addTaskModal')">Нет</a>
-        </modal>
+    <modal name="undoEditModal" :width="400" :height="90" :adaptive="true">
+      <p>Вы уверены, что не хотите сохранить изменения?</p>
+      <a class="btn" @click="$router.push('/')">Да</a>
+      <a class="btn" @click="$modal.hide('undoEditModal')">Нет</a>
+    </modal>
   </div>
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
- 
+import { mapActions, mapGetters } from "vuex";
+
 export default {
-  data () {
+  data() {
     return {
       tasksPoints: [],
-      newTask: '',
-    }
+      newTask: ""
+    };
   },
   computed: {
+    ...mapGetters(["noteById"]),
     note() {
-      return this.$store.getters.noteById(+this.$route.params.id);
+      return this.noteById(+this.$route.params.id);
     }
   },
   methods: {
-    ...mapActions(['updateNote']),
-    undoEdit() {},
+    ...mapActions(["updateNote", "deleteNote"]),
     saveEdit() {
-      this.updateNote({id: this.note.id, tasksPoints: this.tasksPoints})
-      this.$router.push('/')
-    },
-    undo() {},
-    redo() {},
-    addTaskModalOpen() {
-      this.$modal.show('addTaskModal');
+      this.updateNote({ id: this.note.id, tasksPoints: this.tasksPoints });
+      this.$router.push("/");
     },
     addTask() {
-      if (this.newTask !== ''){
-      this.tasksPoints.push(this.newTask);
-      this.newTask = "";
-      this.$modal.hide('addTaskModal');
+      if (this.newTask !== "") {
+        this.tasksPoints.push(this.newTask);
+        this.newTask = "";
+        this.$modal.hide("addTaskModal");
+      }
+    },
+    deleteNoteB() {
+      this.deleteNote({ id: this.note.id });
+      this.$router.push("/");
     }
-  },
   },
 
   created() {
-    this.tasksPoints = this.$store.getters.noteById(+this.$route.params.id).tasksPoints
+    this.tasksPoints = this.noteById(+this.$route.params.id).tasksPoints;
   }
 };
 </script>

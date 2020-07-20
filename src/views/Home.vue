@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 
 
@@ -37,10 +38,8 @@ export default {
     }
   },
   computed: {
-    notes() {
-      return this.$store.getters.notes
-    }
-  }
+    ...mapGetters(['notes'])
+  },
 }
 </script>
 

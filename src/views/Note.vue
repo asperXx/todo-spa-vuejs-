@@ -48,7 +48,7 @@
       <a class="btn" @click="$modal.hide('undoEditModal')">Нет</a>
     </modal>
 
-        <modal name="deleteNoteModal" :width="400" :height="90" :adaptive="true">
+    <modal name="deleteNoteModal" :width="400" :height="90" :adaptive="true">
       <p>Вы уверены, что не хотите удалить заметку?</p>
       <a class="btn" @click="deleteNoteFunc">Да</a>
       <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
@@ -83,6 +83,7 @@ export default {
         this.tasksPoints.push(this.newTask);
         this.newTask = "";
         this.$modal.hide("addTaskModal");
+        this.$store.commit('addCoords', this.tasksPoints);
       }
     },
     deleteNoteFunc() {

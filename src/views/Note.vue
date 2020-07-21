@@ -7,9 +7,9 @@
       </a>
       <ul class="taskList">
         <li v-for="(task, id) in note.tasksPoints" :key="id" class="taskPoint">
-          <input :id="task + id" type="checkbox" class="custom-checkbox" />
+          <input :id="task + id" type="checkbox" class="custom-checkbox" :checked="task.complete" />
           <label :for="task + id">
-            <input class="editInput" type="text" :value="task" />
+            <input class="editInput" type="text" :value="task.task" />
           </label>
           <button @click.prevent="tasksPoints.splice(id, 1)">
             <font-awesome-icon icon="trash-alt" size="lg" />
@@ -63,6 +63,10 @@ export default {
   data() {
     return {
       tasksPoints: [],
+      tasksPoint: {
+        complete: false,
+        task: '',
+      },
       newTask: ""
     };
   },
@@ -80,10 +84,12 @@ export default {
     },
     addTask() {
       if (this.newTask !== "") {
-        this.tasksPoints.push(this.newTask);
+        this.tasksPoint.task = this.newTask;
+
+        this.tasksPoints.push(this.tasksPoint)
         this.newTask = "";
+        console.log(this.tasksPoints)
         this.$modal.hide("addTaskModal");
-        this.$store.commit('addCoords', this.tasksPoints);
       }
     },
     deleteNoteFunc() {

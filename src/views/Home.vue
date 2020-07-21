@@ -12,8 +12,8 @@
       <li 
       v-for="(task, id) in note.tasksPoints"
       :key="id">
-      <input :id="task + id" type="checkbox" class="custom-checkbox" disabled>
-      <label :for="task + id" >{{ task }}</label>
+      <input :id="task + id" type="checkbox" class="custom-checkbox" :checked="task.complete" disabled>
+      <label :for="task + id" >{{ task.task }}</label>
       </li>
     </ul>
     <div class="buttons">

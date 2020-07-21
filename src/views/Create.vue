@@ -7,13 +7,13 @@
 
       <label for="tasks">Список задач</label>
       <div class="tasks">
-        <input type="text" name="tasks" v-model="taskInput" />
+        <input type="text" name="tasks" v-model="newTask" />
         <button type="button" @click.prevent="addTask"><font-awesome-icon icon="plus" size="2x" /></button>
       </div>
 
       <div v-for="(task, id) in tasksPoints" :key="id">
         <div class="taskCard">
-          {{ task }}
+          {{ task.task }}
           <button @click.prevent="tasksPoints.splice(id, 1)" class="deleteBtn">
             <font-awesome-icon icon="trash-alt" size="2x" />
           </button>
@@ -31,16 +31,21 @@ export default {
     return {
       title: '',
       tasksPoints: [],
-      taskInput: "",
+      tasksPoint: {
+        complete: true,
+        task: ''
+      },
+      newTask: ""
     };
   },
   methods: {
     ...mapActions(['createNote']),
     addTask() {
-      if (this.taskInput !== ''){
-      this.tasksPoints.push(this.taskInput);
-      this.taskInput = "";
-      
+      if (this.newTask !== ''){
+       this.tasksPoint.task = this.newTask
+        this.tasksPoints.push(this.tasksPoint)
+        this.newTask = ""
+        console.log(this.tasksPoints)
       } 
     },
     submitHeandler() {

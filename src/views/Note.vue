@@ -29,7 +29,7 @@
             <font-awesome-icon icon="chevron-circle-right" size="lg" />
           </a>
         </div>
-        <a class="btn" @click="deleteNoteB">
+        <a class="btn" @click="$modal.show('deleteNoteModal')">
           <font-awesome-icon icon="trash-alt" size="lg" />
         </a>
       </div>
@@ -46,6 +46,12 @@
       <p>Вы уверены, что не хотите сохранить изменения?</p>
       <a class="btn" @click="$router.push('/')">Да</a>
       <a class="btn" @click="$modal.hide('undoEditModal')">Нет</a>
+    </modal>
+
+        <modal name="deleteNoteModal" :width="400" :height="90" :adaptive="true">
+      <p>Вы уверены, что не хотите удалить заметку?</p>
+      <a class="btn" @click="deleteNoteFunc">Да</a>
+      <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
     </modal>
   </div>
 </template>
@@ -79,7 +85,7 @@ export default {
         this.$modal.hide("addTaskModal");
       }
     },
-    deleteNoteB() {
+    deleteNoteFunc() {
       this.deleteNote({ id: this.note.id });
       this.$router.push("/");
     }

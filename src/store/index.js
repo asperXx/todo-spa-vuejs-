@@ -23,16 +23,17 @@ export default new Vuex.Store({
       console.log(idx)
       localStorage.setItem('notes', JSON.stringify(state.notes))
     },
-    deleteNote(state, {id,tasksPoints}) {
+    deleteNote(state, {id, tasksPoints}) {
       const notes = state.notes.concat()
 
       const idx = notes.findIndex(n => n.id === id)
       const note = notes[idx]
 
       notes[idx] = {...note, tasksPoints}
-      state.notes = notes
-      console.log(idx)
+      state.notes.splice(idx, 1);
       localStorage.setItem('notes', JSON.stringify(state.notes))
+
+
     }
   },
   actions: {

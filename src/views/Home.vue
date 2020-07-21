@@ -18,28 +18,38 @@
     </ul>
     <div class="buttons">
       <router-link :to="'/note/'+ note.id" tag="button">Редактировать</router-link>
-      <button>Удалить</button>
+      <button @click="$modal.show('deleteNoteModal'); idx = note.id">Удалить</button>
     </div>
     </div>
     </div>
     <p v-else>NONONONONO</p>
+      <modal name="deleteNoteModal" :width="400" :height="90" :adaptive="true">
+      <p>Вы уверены, что не хотите удалить заметку?</p>
+      <a class="btn" @click="deleteNoteFunc">Да</a>
+      <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
+    </modal>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
-
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data () {
     return {
-
+      idx: null
     }
   },
   computed: {
     ...mapGetters(['notes'])
   },
+  methods: {
+    ...mapActions(['deleteNote']),
+      deleteNoteFunc() {
+      this.deleteNote({ id: this.idx });
+      this.$modal.hide('deleteNoteModal')
+    }
+  }
 }
 </script>
 

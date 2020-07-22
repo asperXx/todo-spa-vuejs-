@@ -31,19 +31,16 @@ export default {
     return {
       title: '',
       tasksPoints: [],
-      tasksPoint: {
-        complete: true,
-        task: ''
-      },
-      newTask: ""
+      newTask: "",
+      taskId: 0
     };
   },
   methods: {
     ...mapActions(['createNote']),
     addTask() {
       if (this.newTask !== ''){
-       this.tasksPoint.task = this.newTask
-        this.tasksPoints.push(this.tasksPoint)
+        this.tasksPoints.push({'complete': false,'task': this.newTask, 'id': this.taskId })
+        this.taskId++
         this.newTask = ""
         console.log(this.tasksPoints)
       } 

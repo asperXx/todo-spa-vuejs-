@@ -7,8 +7,9 @@
       </a>
       <ul class="taskList">
         <li v-for="(task, id) in note.tasksPoints" :key="id" class="taskPoint">
-          <input :id="task + id" type="checkbox" class="custom-checkbox" :checked="task.complete" />
-          <label :for="task + id">
+          <input :id="task.id" type="checkbox" @change="onCompleteTask" v-model="complete[id]" class="custom-checkbox" :checked="task.complete" />
+          {{task.complete}} 
+          <label :for="task.id">
             <input class="editInput" type="text" :value="task.task" />
           </label>
           <button @click.prevent="tasksPoints.splice(id, 1)">
@@ -63,11 +64,8 @@ export default {
   data() {
     return {
       tasksPoints: [],
-      tasksPoint: {
-        complete: false,
-        task: '',
-      },
-      newTask: ""
+      newTask: "",
+      complete: []
     };
   },
   computed: {
@@ -78,23 +76,26 @@ export default {
   },
   methods: {
     ...mapActions(["updateNote", "deleteNote"]),
+    
     saveEdit() {
       this.updateNote({ id: this.note.id, tasksPoints: this.tasksPoints });
       this.$router.push("/");
     },
     addTask() {
       if (this.newTask !== "") {
-        this.tasksPoint.task = this.newTask;
-
-        this.tasksPoints.push(this.tasksPoint)
-        this.newTask = "";
-        console.log(this.tasksPoints)
+        this.tasksPoints.push({'complete': false,"task": this.newTask })
+        this.newTask = ""
         this.$modal.hide("addTaskModal");
       }
     },
     deleteNoteFunc() {
       this.deleteNote({ id: this.note.id });
       this.$router.push("/");
+    },
+    onCompleteTask() {
+      for (let i = 0; i < this.tasksPoints.length; i++) {
+        this.tasksPoints[i].complete = this.complete[i]
+      }
     }
   },
 

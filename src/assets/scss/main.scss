@@ -200,3 +200,47 @@ h1 {
     line-height: 30px;
     margin-left: 5px;
 }
+
+
+.addTaskModal{
+    .container_modal{
+      display: flex;
+      flex-direction: column;
+      label{
+        margin-top: 5px;
+        font-weight: 600;
+        align-self: center;
+        font-family:arial;
+        color:#666666;
+      }
+      .btn{
+        align-self: center;
+      }
+      .btnCloseModal{
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 30px;
+        height: 20px;
+        line-height: 20px;
+      }
+    }}
+  
+    .deleteNoteModal {
+       .container_modal{
+      display: flex;
+      flex-direction: column;
+      p {
+         margin-top: 15px;
+        font-weight: 600;
+        align-self: center;
+        font-family:arial;
+        color:#666666;
+      }
+      div{
+        display: flex;
+        justify-content: space-around;
+        margin-top: 15px;
+      }
+    }
+    }

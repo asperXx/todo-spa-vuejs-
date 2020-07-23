@@ -23,10 +23,14 @@
       </div>
     </div>
     <p v-else>NONONONONO</p>
-    <modal name="deleteNoteModal" :width="400" :height="90" :adaptive="true">
-      <p>Вы уверены, что не хотите удалить заметку?</p>
-      <a class="btn" @click="deleteNoteFunc">Да</a>
-      <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
+    <modal class="deleteNoteModal" name="deleteNoteModal" :width="400" :height="120" :adaptive="true">
+      <div class="container_modal">
+      <p>Вы уверены, что хотите удалить заметку?</p>
+      <div>
+        <a class="btn" @click="deleteNoteFunc">Да</a>
+        <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
+      </div>
+      </div>
     </modal>
   </div>
 </template>

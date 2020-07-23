@@ -90,6 +90,8 @@ export default {
     },
     addTask() {
       if (this.newTask !== "") {
+        
+        this.editTasksPoint.push(this.newTask);
         this.tasksPoints.push({
           complete: false,
           task: this.newTask,
@@ -148,9 +150,6 @@ export default {
   outline: none;
 }
 
-.close {
-  position: relative;
-}
 .addTaskModal{
   .container_modal{
     display: flex;

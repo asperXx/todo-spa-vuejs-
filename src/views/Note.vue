@@ -1,32 +1,35 @@
 <template>
   <div id="note">
     <div class="cardNote">
-      <h1>{{ note.title }}</h1>
-      <a class="close btn" @click="$modal.show('undoEditModal')">
-        <font-awesome-icon icon="trash-alt" size="lg" />
-      </a>
-      <ul class="taskList">
-        <li v-for="(task, id) in note.tasksPoints" :key="id" class="taskPoint">
-          <input :id="task.id" type="checkbox" @change="onCompleteTask" v-model="complete[id]" class="custom-checkbox" :checked="task.complete" />
-          {{task.complete}} 
+      <h2 class="note__title">{{ note.title }}</h2>
+      <ul class="note__taskList">
+        <li v-for="(task, id) in note.tasksPoints" :key="id" class="note__taskPoint">
+          <input
+            :id="task.id"
+            type="checkbox"
+            @change="onCompleteTask"
+            v-model="complete[id]"
+            class="custom-checkbox"
+            :checked="task.complete"
+          />
           <label :for="task.id">
-            <input class="editInput" type="text" :value="task.task" />
+            <input class="editInput" type="text" @change="editTask" v-model="editTasksPoint[id]" />
           </label>
-          <button @click.prevent="tasksPoints.splice(id, 1)">
-            <font-awesome-icon icon="trash-alt" size="lg" />
-          </button>
+            <a @click.prevent="tasksPoints.splice(id, 1)" class="btn btn_delete_task" name="undo">
+            <font-awesome-icon icon="trash-alt" class="trash-alt" />
+            </a>
         </li>
       </ul>
-      <div class="buttons">
+      <div class="note__buttons">
         <a class="btn" @click="saveEdit">Сохранить</a>
         <a class="btn" @click="$modal.show('addTaskModal')">
           <font-awesome-icon icon="plus" size="lg" />
         </a>
         <div>
-          <a class="btn" name="undo">
+          <a class="btn btn-undo-redo" name="undo">
             <font-awesome-icon icon="chevron-circle-left" size="lg" />
           </a>
-          <a class="btn" name="redo">
+          <a class="btn btn-undo-redo" name="redo">
             <font-awesome-icon icon="chevron-circle-right" size="lg" />
           </a>
         </div>
@@ -35,24 +38,27 @@
         </a>
       </div>
     </div>
-    <modal name="addTaskModal" :width="400" :height="90" :adaptive="true">
-      <input type="text" class="addTaskInput" v-model="newTask" />
+
+    <!-- Модальное окно добавления задания -->
+    <modal class="addTaskModal" name="addTaskModal" :width="400" :height="130" :adaptive="true">
+      <div class="container_modal">
+      <label for="addTaskInput">Новое задание</label>
+      <input id="addTaskInput" type="text" class="addTaskInput" v-model="newTask" />
       <a class="btn" @click="addTask">Add</a>
-      <a class="btnClose" @click="$modal.hide('addTaskModal')">
-        <font-awesome-icon icon="window-close" />
+      <a class="btn btnCloseModal" @click="$modal.hide('addTaskModal')">
+        <font-awesome-icon icon="times" />
       </a>
+      </div>
     </modal>
-
-    <modal name="undoEditModal" :width="400" :height="90" :adaptive="true">
-      <p>Вы уверены, что не хотите сохранить изменения?</p>
-      <a class="btn" @click="$router.push('/')">Да</a>
-      <a class="btn" @click="$modal.hide('undoEditModal')">Нет</a>
-    </modal>
-
-    <modal name="deleteNoteModal" :width="400" :height="90" :adaptive="true">
-      <p>Вы уверены, что не хотите удалить заметку?</p>
-      <a class="btn" @click="deleteNoteFunc">Да</a>
-      <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
+<!-- Модальное окно удаления заметки -->
+    <modal class="deleteNoteModal" name="deleteNoteModal" :width="400" :height="120" :adaptive="true">
+      <div class="container_modal">
+      <p>Вы уверены, что хотите удалить заметку?</p>
+      <div>
+        <a class="btn" @click="deleteNoteFunc">Да</a>
+        <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
+      </div>
+      </div>
     </modal>
   </div>
 </template>
@@ -65,26 +71,31 @@ export default {
     return {
       tasksPoints: [],
       newTask: "",
-      complete: []
+      complete: [],
+      editTasksPoint: [],
     };
   },
   computed: {
     ...mapGetters(["noteById"]),
     note() {
       return this.noteById(+this.$route.params.id);
-    }
+    },
   },
   methods: {
     ...mapActions(["updateNote", "deleteNote"]),
-    
+
     saveEdit() {
       this.updateNote({ id: this.note.id, tasksPoints: this.tasksPoints });
       this.$router.push("/");
     },
     addTask() {
       if (this.newTask !== "") {
-        this.tasksPoints.push({'complete': false,"task": this.newTask })
-        this.newTask = ""
+        this.tasksPoints.push({
+          complete: false,
+          task: this.newTask,
+          id: this.tasksPoints.length,
+        });
+        this.newTask = "";
         this.$modal.hide("addTaskModal");
       }
     },
@@ -94,14 +105,27 @@ export default {
     },
     onCompleteTask() {
       for (let i = 0; i < this.tasksPoints.length; i++) {
-        this.tasksPoints[i].complete = this.complete[i]
+        this.tasksPoints[i].complete = this.complete[i];
       }
-    }
+    },
+    editTask() {
+      for (let i = 0; i < this.tasksPoints.length; i++) {
+        this.tasksPoints[i].task = this.editTasksPoint[i];
+      }
+    },
   },
 
   created() {
     this.tasksPoints = this.noteById(+this.$route.params.id).tasksPoints;
-  }
+    // Запись во временное хранилище(checked task)
+    for (let i = 0; i < this.tasksPoints.length; i++) {
+      this.complete.push(this.tasksPoints[i].complete);
+    }
+    // Запись во временное хранилище(task)
+    for (let i = 0; i < this.tasksPoints.length; i++) {
+      this.editTasksPoint.push(this.tasksPoints[i].task);
+    }
+  },
 };
 </script>
 
@@ -111,16 +135,6 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-top: 15px;
-}
-
-.editInput {
-  width: 95%;
-  font-size: 13px;
-  padding: 6px 0 4px 10px;
-  border: 1px solid #cecece;
-  background: #f6f6f6;
-  border-radius: 8px;
-  outline: none;
 }
 
 .addTaskInput {
@@ -137,10 +151,47 @@ export default {
 .close {
   position: relative;
 }
+.addTaskModal{
+  .container_modal{
+    display: flex;
+    flex-direction: column;
+    label{
+      margin-top: 5px;
+      font-weight: 600;
+      align-self: center;
+      font-family:arial;
+      color:#666666;
+    }
+    .btn{
+      align-self: center;
+    }
+    .btnCloseModal{
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      width: 30px;
+      height: 20px;
+      line-height: 20px;
+    }
+  }}
 
-.btnClose {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-}
+  .deleteNoteModal {
+     .container_modal{
+    display: flex;
+    flex-direction: column;
+    p {
+       margin-top: 15px;
+      font-weight: 600;
+      align-self: center;
+      font-family:arial;
+      color:#666666;
+    }
+    div{
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+    }
+  }
+  }
+
 </style>

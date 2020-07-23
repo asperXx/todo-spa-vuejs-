@@ -3,23 +3,23 @@
     <form>
       <h1>Создать задачу</h1>
       <label for="title">Название заметки</label>
-      <input type="text" name="title" v-model="title" />
+      <input type="text" class="editInput" name="title" v-model="title" />
 
       <label for="tasks">Список задач</label>
       <div class="tasks">
-        <input type="text" name="tasks" v-model="newTask" />
-        <button type="button" @click.prevent="addTask"><font-awesome-icon icon="plus" size="2x" /></button>
+        <input type="text" class="editInput" name="tasks" v-model="newTask" />
+        <a class="btn btn_add_task" @click.prevent="addTask"><font-awesome-icon icon="plus" size="lg" /></a>
       </div>
 
       <div v-for="(task, id) in tasksPoints" :key="id">
         <div class="taskCard">
           {{ task.task }}
-          <button @click.prevent="tasksPoints.splice(id, 1)" class="deleteBtn">
-            <font-awesome-icon icon="trash-alt" size="2x" />
-          </button>
+          <a @click.prevent="tasksPoints.splice(id, 1)" class="btn btn_delete_task" name="undo">
+            <font-awesome-icon icon="trash-alt" class="trash-alt" />
+            </a>
         </div>
       </div>
-      <button @click.prevent="submitHeandler">Сохранить</button>
+      <a class="btn" @click.prevent="submitHandler">Сохранить</a>
     </form>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
         console.log(this.tasksPoints)
       } 
     },
-    submitHeandler() {
+    submitHandler() {
 
       const note = {
         title: this.title,
@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #create {
   display: flex;
   flex-direction: column;
@@ -70,11 +70,16 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  .btn {
+    align-self: center;
+  }
+  label {
+    margin: 5px 0;
+    align-self: center;
+    font-weight: 600;
+  }
 }
-#create input {
-  padding: 10px;
-  margin: 15px 0px;
-}
+
 .taskCard {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
@@ -84,9 +89,12 @@ form {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin:5px 0;
 }
-.deleteBtn {
-  width: 40px;
-  height: 40px;
+
+.tasks .editInput {
+  width: 80%;
 }
+
+
 </style>

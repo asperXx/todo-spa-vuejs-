@@ -10,7 +10,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'
-import { faWindowClose } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VModal from 'vue-js-modal'
 Vue.use(VModal, { componentName: 'Modal' })
 
-library.add(faTrashAlt, faDragon, faPlus, faChevronCircleRight, faChevronCircleLeft, faWindowClose)
+library.add(faTrashAlt, faDragon, faPlus, faChevronCircleRight, faChevronCircleLeft, faTimes)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

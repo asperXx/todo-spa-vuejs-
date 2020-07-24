@@ -22,7 +22,6 @@ export default new Vuex.Store({
 
       notes[idx] = {...note, tasksPoints}
       state.notes = notes
-      console.log(idx)
       localStorage.setItem('notes', JSON.stringify(state.notes))
     },
     deleteNote(state, {id, tasksPoints}) {

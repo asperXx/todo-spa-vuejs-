@@ -49,6 +49,7 @@ export default {
   },
   methods: {
     ...mapActions(["deleteNote"]),
+    // Удаление заметки
     deleteNoteFunc() {
       this.deleteNote({ id: this.idx });
       this.$modal.hide("deleteNoteModal");
@@ -56,7 +57,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-
-</style>

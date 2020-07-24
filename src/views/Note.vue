@@ -2,7 +2,7 @@
   <div id="note">
     <div class="cardNote">
       <h2 class="note__title">{{ note.title }}</h2>
-      <ul class="note__taskList">
+      <ul class="note__taskList" @change="addEventHistory">
         <li v-for="(task, id) in note.tasksPoints" :key="id" class="note__taskPoint">
           <input
             :id="task.id"
@@ -13,11 +13,11 @@
             :checked="task.complete"
           />
           <label :for="task.id">
-            <input class="editInput" type="text" @change="editTask" v-model="editTasksPoint[id]" />
+            <input class="editInput" type="text" @blur="editTask" v-model="editTasksPoint[id]" />
           </label>
-            <a @click.prevent="tasksPoints.splice(id, 1)" class="btn btn_delete_task" name="undo">
+          <a @click.prevent="deleteTasksPoint(task.id)" class="btn btn_delete_task" name="undo">
             <font-awesome-icon icon="trash-alt" class="trash-alt" />
-            </a>
+          </a>
         </li>
       </ul>
       <div class="note__buttons">
@@ -26,10 +26,10 @@
           <font-awesome-icon icon="plus" size="lg" />
         </a>
         <div>
-          <a class="btn btn-undo-redo" name="undo">
+          <a class="btn btn-undo-redo" name="undo" @click="undoEdit">
             <font-awesome-icon icon="chevron-circle-left" size="lg" />
           </a>
-          <a class="btn btn-undo-redo" name="redo">
+          <a class="btn btn-undo-redo" name="redo" @click="redoEdit">
             <font-awesome-icon icon="chevron-circle-right" size="lg" />
           </a>
         </div>
@@ -42,22 +42,28 @@
     <!-- Модальное окно добавления задания -->
     <modal class="addTaskModal" name="addTaskModal" :width="400" :height="130" :adaptive="true">
       <div class="container_modal">
-      <label for="addTaskInput">Новое задание</label>
-      <input id="addTaskInput" type="text" class="addTaskInput" v-model="newTask" />
-      <a class="btn" @click="addTask">Add</a>
-      <a class="btn btnCloseModal" @click="$modal.hide('addTaskModal')">
-        <font-awesome-icon icon="times" />
-      </a>
+        <label for="addTaskInput">Новое задание</label>
+        <input id="addTaskInput" type="text" class="addTaskInput" v-model="newTask" />
+        <a class="btn" @click="addTask">Add</a>
+        <a class="btn btnCloseModal" @click="$modal.hide('addTaskModal')">
+          <font-awesome-icon icon="times" />
+        </a>
       </div>
     </modal>
-<!-- Модальное окно удаления заметки -->
-    <modal class="deleteNoteModal" name="deleteNoteModal" :width="400" :height="120" :adaptive="true">
+    <!-- Модальное окно удаления заметки -->
+    <modal
+      class="deleteNoteModal"
+      name="deleteNoteModal"
+      :width="400"
+      :height="120"
+      :adaptive="true"
+    >
       <div class="container_modal">
-      <p>Вы уверены, что хотите удалить заметку?</p>
-      <div>
-        <a class="btn" @click="deleteNoteFunc">Да</a>
-        <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
-      </div>
+        <p>Вы уверены, что хотите удалить заметку?</p>
+        <div>
+          <a class="btn" @click="deleteNoteFunc">Да</a>
+          <a class="btn" @click="$modal.hide('deleteNoteModal')">Нет</a>
+        </div>
       </div>
     </modal>
   </div>
@@ -83,14 +89,14 @@ export default {
   },
   methods: {
     ...mapActions(["updateNote", "deleteNote"]),
-
+    // Сохранение заметки
     saveEdit() {
       this.updateNote({ id: this.note.id, tasksPoints: this.tasksPoints });
       this.$router.push("/");
     },
+    // Добавление задания
     addTask() {
       if (this.newTask !== "") {
-        
         this.editTasksPoint.push(this.newTask);
         this.tasksPoints.push({
           complete: false,
@@ -101,24 +107,37 @@ export default {
         this.$modal.hide("addTaskModal");
       }
     },
+    // Удаление заметки
     deleteNoteFunc() {
       this.deleteNote({ id: this.note.id });
       this.$router.push("/");
     },
+    //Отслеживание выполнения задания(checkbox)
     onCompleteTask() {
       for (let i = 0; i < this.tasksPoints.length; i++) {
         this.tasksPoints[i].complete = this.complete[i];
       }
     },
+    //Отслеживание изменения заданий
     editTask() {
       for (let i = 0; i < this.tasksPoints.length; i++) {
         this.tasksPoints[i].task = this.editTasksPoint[i];
+      }
+    },
+
+    deleteTasksPoint(id) {
+      this.tasksPoints.splice(id, 1);
+      // пересчет id после удаления задания
+      for (let i = 0; i < this.tasksPoints.length; i++) {
+        this.tasksPoints[i].id = i;
       }
     },
   },
 
   created() {
     this.tasksPoints = this.noteById(+this.$route.params.id).tasksPoints;
+    // this.history.push(this.tasksPoints)
+    console.log(this.history);
     // Запись во временное хранилище(checked task)
     for (let i = 0; i < this.tasksPoints.length; i++) {
       this.complete.push(this.tasksPoints[i].complete);
@@ -130,67 +149,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-#note {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.addTaskInput {
-  width: 95%;
-  font-size: 13px;
-  padding: 6px 0 4px 10px;
-  margin: 10px;
-  border: 1px solid #cecece;
-  background: #f6f6f6;
-  border-radius: 8px;
-  outline: none;
-}
-
-.addTaskModal{
-  .container_modal{
-    display: flex;
-    flex-direction: column;
-    label{
-      margin-top: 5px;
-      font-weight: 600;
-      align-self: center;
-      font-family:arial;
-      color:#666666;
-    }
-    .btn{
-      align-self: center;
-    }
-    .btnCloseModal{
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      width: 30px;
-      height: 20px;
-      line-height: 20px;
-    }
-  }}
-
-  .deleteNoteModal {
-     .container_modal{
-    display: flex;
-    flex-direction: column;
-    p {
-       margin-top: 15px;
-      font-weight: 600;
-      align-self: center;
-      font-family:arial;
-      color:#666666;
-    }
-    div{
-      display: flex;
-      justify-content: space-around;
-      margin-top: 15px;
-    }
-  }
-  }
-
-</style>

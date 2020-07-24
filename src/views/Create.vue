@@ -37,64 +37,26 @@ export default {
   },
   methods: {
     ...mapActions(['createNote']),
+    // Добавление задания
     addTask() {
       if (this.newTask !== ''){
         this.tasksPoints.push({'complete': false,'task': this.newTask, 'id': this.taskId })
         this.taskId++
         this.newTask = ""
-        console.log(this.tasksPoints)
       } 
     },
+    // Создание заметки
     submitHandler() {
-
-      const note = {
+      if (this.title !== '' && this.tasksPoints !== [])
+      {const note = {
         title: this.title,
         tasksPoints: this.tasksPoints,
         id: Date.now()
       }
       this.createNote(note)
-      this.$router.push('/')
+      this.$router.push('/')}
     }
   },
 };
 </script>
 
-<style lang="scss">
-#create {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  .btn {
-    align-self: center;
-  }
-  label {
-    margin: 5px 0;
-    align-self: center;
-    font-weight: 600;
-  }
-}
-
-.taskCard {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  padding: 15px 30px;
-  word-break: break-all;
-  max-width: 600px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin:5px 0;
-}
-
-.tasks .editInput {
-  width: 80%;
-}
-
-
-</style>

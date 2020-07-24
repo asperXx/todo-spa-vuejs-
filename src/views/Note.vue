@@ -2,7 +2,7 @@
   <div id="note">
     <div class="cardNote">
       <h2 class="note__title">{{ note.title }}</h2>
-      <ul class="note__taskList" @change="addEventHistory">
+      <ul class="note__taskList">
         <li v-for="(task, id) in note.tasksPoints" :key="id" class="note__taskPoint">
           <input
             :id="task.id"
@@ -26,10 +26,10 @@
           <font-awesome-icon icon="plus" size="lg" />
         </a>
         <div>
-          <a class="btn btn-undo-redo" name="undo" @click="undoEdit">
+          <a class="btn btn-undo-redo" name="undo">
             <font-awesome-icon icon="chevron-circle-left" size="lg" />
           </a>
-          <a class="btn btn-undo-redo" name="redo" @click="redoEdit">
+          <a class="btn btn-undo-redo" name="redo">
             <font-awesome-icon icon="chevron-circle-right" size="lg" />
           </a>
         </div>
@@ -71,7 +71,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
 export default {
   data() {
     return {
